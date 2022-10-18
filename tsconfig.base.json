@@ -1,0 +1,37 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@frontboot/components/app": [
+        "libs/components/src/app/index.ts"
+      ],
+      "@frontboot/components/shared": [
+        "libs/components/src/shared/index.ts"
+      ],
+      "@frontboot/components/web/*": [
+        "libs/components/src/web/index.ts"
+      ]
+
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
+}
