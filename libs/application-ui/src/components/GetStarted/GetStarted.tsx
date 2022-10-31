@@ -1,17 +1,19 @@
-import { Box, Button, Grid, TextField, Typography } from '@mui/material';
-//import { Project } from '@northlyjs/data';
-import { useState } from 'react';
-import { Dialog, DialogContent } from '@frontboot/components/shared';
+'use client';
+
+import { Box, Button, Unstable_Grid2 as Grid, TextField, Typography } from '@mui/material';
+
+import { Dialog, DialogContent } from '@frontboot/shared-ui';
 import GetStartedOptions from './GetStartedOptions';
 import { ProjectStartType } from './types';
+import { useState as useS } from 'react';
 
 interface GetStartedProps {
-  onSelectProject: (p: any) => void;
+  onSelectProject?: (p: any) => void;
 }
 
 export function GetStarted(props: GetStartedProps) {
   const { onSelectProject } = props;
-  const [selectedItem, setSelectedItem] = useState<ProjectStartType>('new');
+  const [selectedItem, setSelectedItem] = useS<ProjectStartType>('new');
 
   const cloneProject = () => {
     onSelectProject({
@@ -26,19 +28,18 @@ export function GetStarted(props: GetStartedProps) {
         <Typography variant="introHeader">welcome to northlyjs</Typography>
         <Typography variant="h4">get started by selecting a project</Typography>
         <Grid container mt={1} spacing={4}>
-          <Grid item xs={12} md={6}>
+          <Grid xs={12} md={6}>
             <GetStartedOptions
               setSelectedItem={setSelectedItem}
               selectedItem={selectedItem}
             />
           </Grid>
           <Grid
-            item
             xs={12}
             md={6}
-            textAlign="left"
             mt={2}
             display="flex"
+            textAlign="left"
             flexDirection="column"
             alignItems="flex-end"
             justifyContent="space-between"

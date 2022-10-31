@@ -11,7 +11,7 @@ export const Dialog = styled(MuiDialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
     backgroundColor: theme.palette.darkGrey.light,
     maxWidth: '900px',
-    width: '800px',
+    // width: '800px',
     padding: theme.spacing(1),
     borderRadius: theme.spacing(2),
   },
