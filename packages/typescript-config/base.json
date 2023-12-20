@@ -15,6 +15,10 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2022"
+    "target": "ES2022",
+    "paths": {
+      "@frontboot/ui/*": ["../../packages/ui/src/*"],
+      "@frontboot/recipes": ["../../packages/ui/recipes/*"]
+    }
   }
 }

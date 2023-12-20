@@ -5,7 +5,10 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@frontboot/ui/*": ["../../packages/ui/src/*"]
+    }
   },
   "include": [
     "next-env.d.ts",
