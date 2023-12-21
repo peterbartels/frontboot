@@ -44,7 +44,7 @@ const FlyOutMenuItem = (item: FlyOutMenuItemProps) => (
 );
 
 const style = css({
-  border: "[2px solid red]",
+  border: "[2px solid yellow]",
 });
 
 export const FlyOutMenuButton = withContext(styled(FlyOutMenuItem), "item");
@@ -53,7 +53,7 @@ export const FlyOutMenu = (props: FlyOutMenuProps) => {
   const classes = flyOutMenu();
   return (
     <nav className={classes.root + " " + style} aria-label={props.label}>
-      <ul>{props.children}qwerty</ul>
+      <ul>{props.children}qwerty1</ul>
     </nav>
   );
 };
