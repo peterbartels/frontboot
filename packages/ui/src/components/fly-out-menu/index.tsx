@@ -1,13 +1,17 @@
 "use client";
 
 import { Link, Button, LinkProps, ButtonProps } from "react-aria-components";
+
+import {
+  useFocusWithin,
+  AriaPopoverProps,
+  usePopover,
+  useOverlayTrigger,
+} from "react-aria";
+import { useOverlayTriggerState, OverlayTriggerState } from "react-stately";
+
 import { flyOutMenu } from "@frontboot/styled-system/recipes";
-
-import { createStyleContext } from "@frontboot/ui/utils/create-style-context";
-import { styled } from "@frontboot/styled-system/jsx";
-import { css } from "@frontboot/styled-system/css";
-
-const { withProvider, withContext } = createStyleContext(flyOutMenu);
+import { useRef } from "react";
 
 export type FlyOutMenuItemPropsLinkProps = LinkProps & {
   isLink: true;
@@ -22,7 +26,8 @@ export type FlyOutMenuItemProps = (
   | FlyOutMenuItemPropsLinkProps
   | FlyOutMenuItemPropsButtonProps
 ) & {
-  flyout: React.ReactNode;
+  children: React.ReactNode;
+  title: string;
   isLink?: boolean;
 };
 
@@ -31,29 +36,86 @@ type FlyOutMenuProps = {
   children: React.ReactNode;
 };
 
-// const FlyOutMenuRoot = withProvider(styled("nav"), "root");
+interface PopoverProps
+  extends Omit<AriaPopoverProps, "popoverRef">,
+    React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+  state: OverlayTriggerState;
+}
 
-const FlyOutMenuItem = (item: FlyOutMenuItemProps) => (
-  <li>
-    {item.isLink ? (
-      <Link {...item}>{item.flyout}</Link>
-    ) : (
-      <Button {...item}>{item.flyout}</Button>
-    )}
-  </li>
-);
+function Popover({ children, state, offset = 8, ...props }: PopoverProps) {
+  let popoverRef = useRef(null);
+  let { popoverProps, arrowProps, placement } = usePopover(
+    {
+      ...props,
+      offset,
 
-const style = css({
-  border: "[2px solid yellow]",
-});
+      //needed so that there is not focus trap and all other elements get aria-hidden
+      isNonModal: true,
+      popoverRef,
+    },
+    state,
+  );
 
-export const FlyOutMenuButton = withContext(styled(FlyOutMenuItem), "item");
+  return (
+    <div {...popoverProps} ref={popoverRef} className="popover">
+      <svg
+        {...arrowProps}
+        className="arrow"
+        data-placement={placement}
+        viewBox="0 0 12 12"
+        width={24}
+        height={24}
+      >
+        <path d="M0 0 L6 6 L12 0" />
+      </svg>
+      {children}
+    </div>
+  );
+}
+
+export const FlyOutMenuItem = (item: FlyOutMenuItemProps) => {
+  let state = useOverlayTriggerState({});
+
+  let { focusWithinProps } = useFocusWithin({
+    onFocusWithinChange: state.setOpen,
+  });
+  let ref = useRef(null);
+  let { triggerProps } = useOverlayTrigger({ type: "menu" }, state, ref);
+
+  //remove haspopup because a flyout menu has none if these items
+  //https://github.com/w3c/wai-tutorials/issues/624
+  triggerProps["aria-haspopup"] = undefined;
+  // console.log(triggerProps,);
+  const classes = flyOutMenu();
+
+  return (
+    <li {...focusWithinProps} ref={ref}>
+      {/* <DialogTrigger> */}
+      {item.isLink ? (
+        <Link {...item} {...triggerProps}>
+          {item.title}
+        </Link>
+      ) : (
+        <Button {...item} {...triggerProps}>
+          {item.title}
+        </Button>
+      )}
+      {state.isOpen && (
+        <Popover triggerRef={ref} state={state} placement="bottom left">
+          <div className={classes.popover}>{item.children}</div>
+        </Popover>
+      )}
+      {/* </DialogTrigger> */}
+    </li>
+  );
+};
 
 export const FlyOutMenu = (props: FlyOutMenuProps) => {
   const classes = flyOutMenu();
   return (
-    <nav className={classes.root + " " + style} aria-label={props.label}>
-      <ul>{props.children}qwerty1</ul>
+    <nav className={classes.root} aria-label={props.label}>
+      <ul>{props.children}</ul>
     </nav>
   );
 };
